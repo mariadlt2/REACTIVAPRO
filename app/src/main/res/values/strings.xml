@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Proyecto ReactivaPro</string>
+    <string name="registrar">REGISTRAR</string>
+    <string name="button">Button</string>
+    <string name="btnregistro">Button</string>
+    <string name="describa_la_incidencia">Describa la incidencia</string>
+    <string name="editTextTextEmailAddress_hint">Input your email</string>
 </resources>
