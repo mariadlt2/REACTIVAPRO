@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1067367095764",
+    "project_id": "reactivapro-8fd43",
+    "storage_bucket": "reactivapro-8fd43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067367095764:android:95c7ef3a4545d611058a41",
+        "android_client_info": {
+          "package_name": "com.delatorremaria.proyectoreactivapro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067367095764-5qpj920qhk1gmisuiaorktaa25459278.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdOK2HPQBpVE1KUR7TsK9YiHT2y29mul8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067367095764-5qpj920qhk1gmisuiaorktaa25459278.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

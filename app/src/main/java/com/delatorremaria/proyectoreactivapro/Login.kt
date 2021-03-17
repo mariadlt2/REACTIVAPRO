@@ -8,8 +8,11 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 
 
 class Login : AppCompatActivity() {
@@ -23,6 +26,7 @@ class Login : AppCompatActivity() {
     var contraseñaRecordada : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.ThemeProyectoReactivaPro)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -32,6 +36,12 @@ class Login : AppCompatActivity() {
         login = findViewById<Button>(R.id.btnLogin)
         checkBoxRecordarme = findViewById<CheckBox>(R.id.checkBoxLogin)
         registrar = findViewById<Button>(R.id.btnRegistro)
+
+        //Google Analytics
+        val analitics: FirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString("Mensaje","Integracion de Firebase completa")
+        analitics.logEvent("InitScreen",bundle)
 
         //Inicializo llave
         val masterKeyAlias: String = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
@@ -57,20 +67,28 @@ class Login : AppCompatActivity() {
             //view -> irAMenu(usuario,contraseña)
             if (!ValidarDatos())
                 return@setOnClickListener
-
-            if(checkBoxRecordarme.isChecked){
-                sharedPreferences
-                    .edit()
-                    .putString(LOGIN_KEY,usuario.text.toString())
-                    .putString(PASSWORD_KEY,contraseña.text.toString())
-                    .apply()
-                irAMenu()
-            }
-            else{
-                val editor = sharedPreferences.edit()
-                editor.putString(LOGIN_KEY,"")
-                editor.putString(PASSWORD_KEY,"")
-                editor.commit()
+            //Autenticacion
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(usuario.text.toString()
+                ,contraseña.text.toString()).addOnCompleteListener {
+                if (it.isSuccessful){
+                    if(checkBoxRecordarme.isChecked){
+                        sharedPreferences
+                            .edit()
+                            .putString(LOGIN_KEY,usuario.text.toString())
+                            .putString(PASSWORD_KEY,contraseña.text.toString())
+                            .apply()
+                        irAMenu()
+                    }
+                    else{
+                        val editor = sharedPreferences.edit()
+                        editor.putString(LOGIN_KEY,"")
+                        editor.putString(PASSWORD_KEY,"")
+                        editor.commit()
+                        irAMenu()
+                    }
+                }else{
+                    alerta()
+                }
             }
         }
 
@@ -82,12 +100,20 @@ class Login : AppCompatActivity() {
     private fun irAMenu(){
             val menuIntent: Intent = Intent(this, Menu::class.java)
             startActivity(menuIntent)
-
     }
 
     private fun irAlRegistro(){
         val menuIntent: Intent = Intent(this, Registro::class.java)
         startActivity(menuIntent)
+    }
+
+    private fun alerta(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("Se a producido un error de autenticacion")
+        builder.setPositiveButton("Aceptar",null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     fun ValidarDatos(): Boolean {
